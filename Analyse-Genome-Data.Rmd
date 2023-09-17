@@ -1,0 +1,70 @@
+---
+title: "Analyse-Genome-Data"
+author: "Doris"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(gsheet)
+library(tidyr)
+library(dplyr)
+library(leaflet)
+library(googlesheets4)
+```
+
+```{r}
+genome_data <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1LS74FcZ2Rvgs6GosR3PatFAIdkphq_ypRF-pZAsjvQY/edit?usp=sharing")
+
+long_genome_data <- genome_data %>% pivot_longer(!c(FEATURE_ID, taxonomy), names_to = "SAMPLE_ID", values_to = "value")
+
+long_genome_data
+
+```
+
+```{r}
+genome_data1 <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1ZXH6KxrSXz_FhOnUPB-lTjVUbYi68x-iJxubx0lfcPk/edit?usp=sharing")
+
+long_genomeInvertabratesIdentified_Data <- genome_data1 %>% pivot_longer(!c(FEATURE_ID, taxonomy), names_to = "SAMPLE_ID", values_to = "value")
+
+long_genomeInvertabratesIdentified_Data
+```
+
+```{r}
+
+# Remplacez l'URL par l'URL de votre fichier Google Sheets
+file_url <- "https://docs.google.com/spreadsheets/d/1zmB35K6jBPoaTYWAaW7LWcpBA7HBD48wmedB-j7Wso8/edit?usp=sharing"
+
+# Obtenez le nom de la feuille
+sheet_name <- gs4_find(file_url)
+
+write_sheet(long_genomeInvertabratesIdentified_Data)
+
+```
+
+
+```{r}
+
+long_genome_fish_data <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1Fbm26V4kAuz7DtFz0CSUt8xBzgsW6PhvtfD9R1_KB08/edit?usp=sharing")
+
+fish_map <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1xRhjszPQpBNGDPy_O8rTBwMlMt8tBXHgsoCMpl_bFJQ/edit?usp=sharing")
+
+genome_fish_full_data <- full_join(long_genome_fish_data, fish_map, by="SampleID")
+
+write_sheet(genome_fish_full_data)
+
+```
+
+```{r}
+
+long_genomeInvertebratesIdentified_Data <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1KUF-C8eIVikEXMD0SEowtGhNYInuOKz4l-qGuKGHK14/edit?usp=sharing")
+
+invertabrates_map <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1guPot-d5chEHyjYUn_Ufx51YMRfCkJGOOFLAnS1luhE/edit?usp=sharing")
+
+genome_invertebratesIdentified_full_data <- full_join(long_genomeInvertebratesIdentified_Data, invertabrates_map, by="SampleID")
+
+```
