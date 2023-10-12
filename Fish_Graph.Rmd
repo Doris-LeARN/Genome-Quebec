@@ -1,0 +1,167 @@
+---
+title: "Graph_testing"
+author: "Myrix"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#FISH 
+
+```{r}
+#calling all requires packages
+library(gsheet)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+#upload file from Google sheets
+Fish_Details = gsheet2tbl("https://docs.google.com/spreadsheets/d/1LyIXPB77F8BG3RLUKCRrxYQBHDtvqW83fWqMFucV1zM/edit?usp=sharing")
+```
+
+```{r}
+#make new column according to the value variable - if greater than 0 then enters the "Detected_OTU" 
+Fish_Details$Detected_OTU = Fish_Details$value > 0
+colnames(Fish_Details)
+```
+
+```{r}
+#making a bar plot for Detection_OTU in Fish
+ggplot(Fish_Details, aes(x = Alias, fill =Detected_OTU)) +
+  geom_bar(stat = "count", position = "stack", width = 0.8) +
+  labs(
+    title = "OTU Detection Count by each Fish SampleID",
+    x = "Alias",
+    y = "Detection Count",
+    fill = "Detected_OTU") +
+  scale_fill_brewer(palette = "Set1") + 
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) # Rotate x-axislabels
+```
+
+```{r}
+# Create a bar plot to count samples within each taxonomic group
+ggplot(Fish_Details, aes(x = FEATURE_ID, fill = Detected_OTU)) +
+  geom_bar(stat = "count") +
+  labs(
+    title = "Sample Count in Each Fish Taxonomic Group",
+    x = "FeatureID",
+    y = "Sample Count",
+    fill = "Detected_OTU") +
+  scale_fill_brewer(palette = "Set2") + 
+  theme_minimal()
+```
+
+```{r}
+# Filter the data for "True" detections
+library(dplyr)
+Fish_Details_T = filter(Fish_Details, Detected_OTU == TRUE) 
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Kingdom taxonomic group
+library(ggplot2)
+
+ggplot(Fish_Details_T, aes(x = k, fill = k)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Kingdom",
+       x = "Kingdom (k)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none")  # Remove the legend
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Phylum taxonomic group
+library(ggplot2)
+
+ggplot(Fish_Details_T, aes(x = p, fill = p)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Phylum",
+       x = "Phylum (p)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 45, hjust = 1))  # Remove the legend and turn x-axis labels
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Class taxonomic group
+library(ggplot2)
+
+ggplot(Fish_Details_T, aes(x = c, fill = c)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Class",
+       x = "Class (c)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 45, hjust = 1))  # Remove the legend and turn x-axis labels
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Order taxonomic group
+library(ggplot2)
+
+ggplot(Fish_Details_T, aes(x = o, fill = o)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Order",
+       x = "Order (o)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 45, hjust = 1))  # Remove the legend and turn x-axis labels
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Family taxonomic group
+library(ggplot2)
+
+ggplot(Fish_Details_T, aes(x = f, fill = f)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Family",
+       x = "Family (f)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 45, hjust = 1))  # Remove the legend and turn x-axis labels
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Genus taxonomic group
+library(ggplot2)
+
+ggplot(Fish_Details_T, aes(x = g, fill = g)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Genus",
+       x = "Genus (g)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 45, hjust = 1))  # Remove the legend and turn x-axis labels
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
