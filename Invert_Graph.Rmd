@@ -1,0 +1,161 @@
+---
+title: "Invert_Graph"
+author: "Myrix"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#INVERTEBRATE
+
+```{r}
+#calling all requires packages
+library(gsheet)
+library(dplyr)
+library(ggplot2)
+
+```
+
+```{r}
+#Importing Invert. data from gsheet (all taxonomic groups)
+Invert_Details = gsheet2tbl("https://docs.google.com/spreadsheets/d/1Rv4LEw7YD4HN6wL0jOONCX79ZWu3E3CfFlusBYZ21B4/edit?usp=sharing")
+
+#Select only the first 100 Feature IDs from whole Invert. file
+Invert_Details = head(Invert_Details, 8690)
+
+#make new column according to the value variable - if greater than 0 then enters the "Detected_OTU" 
+Invert_Details$Detected_OTU = Invert_Details$value > 0
+colnames(Invert_Details)
+```
+
+```{r}
+#making a bar plot for Detection_OTU in Invertebrates
+ggplot(Invert_Details, aes(x = alias, fill =Detected_OTU)) +
+  geom_bar(stat = "count", position = "stack", width = 0.8) +
+  labs(
+    title = "OTU Detection Count by each Invertebrate SampleID",
+    x = "Alias",
+    y = "Detection Count",
+    fill = "Detected_OTU") +
+  scale_fill_brewer(palette = "Set1") + 
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) # Rotate x-axislabels
+```
+
+```{r}
+# Create a bar plot to count samples within each taxonomic group For Invertebrates
+ggplot(Invert_Details, aes(x = FEATURE_ID, fill = Detected_OTU)) +
+  geom_bar(stat = "count") +
+  labs(
+    title = "Sample Count in Each Invertebrate Taxonomic Group",
+    x = "FeatureID",
+    y = "Sample Count",
+    fill = "Detected_OTU") +
+  scale_fill_brewer(palette = "Set2") + 
+  theme_minimal()
+```
+```{r}
+# Filter the data for "True" detections
+library(dplyr)
+Invert_Details_T = filter(Invert_Details, Detected_OTU == TRUE) 
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Kingdom taxonomic group
+library(ggplot2)
+
+ggplot(Invert_Details_T, aes(x = k, fill = k)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Invertebrate Kingdom",
+       x = "Kingdom (k)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none")  #Remove the legend
+```
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Phylum taxonomic group
+library(ggplot2)
+
+ggplot(Invert_Details_T, aes(x = p, fill = p)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Invertebrate Phylum",
+       x = "Phylum (p)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 90, hjust = 1))  # Remove the legend and turn x-axis labels
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Class taxonomic group
+library(ggplot2)
+
+ggplot(Invert_Details_T, aes(x = c, fill = c)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Invertebrate Class",
+       x = "Class (c)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 90, hjust = 1))  # Remove the legend and turn x-axis labels
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Order taxonomic group
+library(ggplot2)
+
+ggplot(Invert_Details_T, aes(x = o, fill = o)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Invertebrate Order",
+       x = "Order (o)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 90, hjust = 1))  # Remove the legend and turn x-axis labels
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Family taxonomic group
+library(ggplot2)
+
+ggplot(Invert_Details_T, aes(x = f, fill = f)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Invertebrate Family",
+       x = "Family (f)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 90, hjust = 1))  # Remove the legend and turn x-axis labels
+```
+
+```{r}
+#Creating a stacked bar plot showing SampleID count in each Genus taxonomic group
+library(ggplot2)
+
+ggplot(Invert_Details_T, aes(x = g, fill = g)) +
+  geom_bar(stat = "count") +
+  labs(title = "Sample ID Count Within Each Genus",
+       x = "Genus (g)",
+       y = "Sample Count") +
+  scale_color_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 90, hjust = 1))  # Remove the legend and turn x-axis labels
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
